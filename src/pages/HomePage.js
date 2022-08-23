@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { Routes } from "../routes";
 
@@ -48,6 +48,7 @@ import Tables from "./components/Tables";
 import Tabs from "./components/Tabs";
 import Tooltips from "./components/Tooltips";
 import Toasts from "./components/Toasts";
+import Admin from "../components/AdminPage";
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -58,7 +59,15 @@ const RouteWithLoader = ({ component: Component, ...rest }) => {
   }, []);
 
   return (
-    <Route {...rest} render={props => ( <> <Preloader show={loaded ? false : true} /> <Component {...props} /> </> ) } />
+    <Route
+      {...rest}
+      render={(props) => (
+        <>
+          {" "}
+          <Preloader show={loaded ? false : true} /> <Component {...props} />{" "}
+        </>
+      )}
+    />
   );
 };
 
@@ -71,62 +80,108 @@ const RouteWithSidebar = ({ component: Component, ...rest }) => {
   }, []);
 
   const localStorageIsSettingsVisible = () => {
-    return localStorage.getItem('settingsVisible') === 'false' ? false : true
-  }
+    return localStorage.getItem("settingsVisible") === "false" ? false : true;
+  };
 
-  const [showSettings, setShowSettings] = useState(localStorageIsSettingsVisible);
+  const [showSettings, setShowSettings] = useState(
+    localStorageIsSettingsVisible
+  );
 
   const toggleSettings = () => {
     setShowSettings(!showSettings);
-    localStorage.setItem('settingsVisible', !showSettings);
-  }
+    localStorage.setItem("settingsVisible", !showSettings);
+  };
 
   return (
-    <Route {...rest} render={props => (
-      <>
-        <Preloader show={loaded ? false : true} />
-        <Sidebar />
+    <Route
+      {...rest}
+      render={(props) => (
+        <>
+          <Preloader show={loaded ? false : true} />
+          <Sidebar />
 
-        <main className="content">
-          <Navbar />
-          <Component {...props} />
-          <Footer toggleSettings={toggleSettings} showSettings={showSettings} />
-        </main>
-      </>
-    )}
+          <main className="content">
+            <Navbar />
+            <Component {...props} />
+            <Footer
+              toggleSettings={toggleSettings}
+              showSettings={showSettings}
+            />
+          </main>
+        </>
+      )}
     />
   );
 };
 
 export default () => (
   <Switch>
-    <RouteWithLoader exact path={Routes.Presentation.path} component={Presentation} />
     <RouteWithLoader exact path={Routes.Signin.path} component={Signin} />
     <RouteWithLoader exact path={Routes.Signup.path} component={Signup} />
-    <RouteWithLoader exact path={Routes.ForgotPassword.path} component={ForgotPassword} />
-    <RouteWithLoader exact path={Routes.ResetPassword.path} component={ResetPassword} />
+    <RouteWithLoader
+      exact
+      path={Routes.ForgotPassword.path}
+      component={ForgotPassword}
+    />
+    <RouteWithLoader
+      exact
+      path={Routes.ResetPassword.path}
+      component={ResetPassword}
+    />
     <RouteWithLoader exact path={Routes.Lock.path} component={Lock} />
-    <RouteWithLoader exact path={Routes.NotFound.path} component={NotFoundPage} />
-    <RouteWithLoader exact path={Routes.ServerError.path} component={ServerError} />
+    <RouteWithLoader
+      exact
+      path={Routes.NotFound.path}
+      component={NotFoundPage}
+    />
+    <RouteWithLoader
+      exact
+      path={Routes.ServerError.path}
+      component={ServerError}
+    />
 
     {/* pages */}
-    <RouteWithSidebar exact path={Routes.DashboardOverview.path} component={DashboardOverview} />
+    <RouteWithSidebar
+      exact
+      path={Routes.DashboardOverview.path}
+      component={DashboardOverview}
+    />
     <RouteWithSidebar exact path={Routes.Upgrade.path} component={Upgrade} />
-    <RouteWithSidebar exact path={Routes.Transactions.path} component={Transactions} />
+    <RouteWithSidebar
+      exact
+      path={Routes.Transactions.path}
+      component={Transactions}
+    />
     <RouteWithSidebar exact path={Routes.Settings.path} component={Settings} />
-    <RouteWithSidebar exact path={Routes.BootstrapTables.path} component={BootstrapTables} />
+    <RouteWithSidebar
+      exact
+      path={Routes.BootstrapTables.path}
+      component={BootstrapTables}
+    />
 
     {/* components */}
-    <RouteWithSidebar exact path={Routes.Accordions.path} component={Accordion} />
+    <RouteWithSidebar
+      exact
+      path={Routes.Accordions.path}
+      component={Accordion}
+    />
     <RouteWithSidebar exact path={Routes.Alerts.path} component={Alerts} />
     <RouteWithSidebar exact path={Routes.Badges.path} component={Badges} />
-    <RouteWithSidebar exact path={Routes.Breadcrumbs.path} component={Breadcrumbs} />
+    <RouteWithSidebar
+      exact
+      path={Routes.Breadcrumbs.path}
+      component={Breadcrumbs}
+    />
     <RouteWithSidebar exact path={Routes.Buttons.path} component={Buttons} />
     <RouteWithSidebar exact path={Routes.Forms.path} component={Forms} />
     <RouteWithSidebar exact path={Routes.Modals.path} component={Modals} />
     <RouteWithSidebar exact path={Routes.Navs.path} component={Navs} />
     <RouteWithSidebar exact path={Routes.Navbars.path} component={Navbars} />
-    <RouteWithSidebar exact path={Routes.Pagination.path} component={Pagination} />
+    <RouteWithSidebar
+      exact
+      path={Routes.Pagination.path}
+      component={Pagination}
+    />
     <RouteWithSidebar exact path={Routes.Popovers.path} component={Popovers} />
     <RouteWithSidebar exact path={Routes.Progress.path} component={Progress} />
     <RouteWithSidebar exact path={Routes.Tables.path} component={Tables} />
@@ -135,13 +190,80 @@ export default () => (
     <RouteWithSidebar exact path={Routes.Toasts.path} component={Toasts} />
 
     {/* documentation */}
-    <RouteWithSidebar exact path={Routes.DocsOverview.path} component={DocsOverview} />
-    <RouteWithSidebar exact path={Routes.DocsDownload.path} component={DocsDownload} />
-    <RouteWithSidebar exact path={Routes.DocsQuickStart.path} component={DocsQuickStart} />
-    <RouteWithSidebar exact path={Routes.DocsLicense.path} component={DocsLicense} />
-    <RouteWithSidebar exact path={Routes.DocsFolderStructure.path} component={DocsFolderStructure} />
-    <RouteWithSidebar exact path={Routes.DocsBuild.path} component={DocsBuild} />
-    <RouteWithSidebar exact path={Routes.DocsChangelog.path} component={DocsChangelog} />
+    <RouteWithSidebar
+      exact
+      path={Routes.DocsOverview.path}
+      component={DocsOverview}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.DocsDownload.path}
+      component={DocsDownload}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.DocsQuickStart.path}
+      component={DocsQuickStart}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.DocsLicense.path}
+      component={DocsLicense}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.DocsFolderStructure.path}
+      component={DocsFolderStructure}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.DocsBuild.path}
+      component={DocsBuild}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.DocsChangelog.path}
+      component={DocsChangelog}
+    />
+
+    {/* Our Admin Page */}
+    <RouteWithSidebar
+      exact
+      path={Routes.Sidebar.path}
+      component={Admin.Sidebar}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.Admission.path}
+      component={Admin.Admission}
+    />
+    <RouteWithSidebar exact path={Routes.About.path} component={Admin.About} />
+    <RouteWithSidebar
+      exact
+      path={Routes.Banner.path}
+      component={Admin.Banner}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.Campus.path}
+      component={Admin.Campus}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.Concern.path}
+      component={Admin.Concern}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.Footer.path}
+      component={Admin.Footer}
+    />
+    <RouteWithSidebar exact path={Routes.Skill.path} component={Admin.Skill} />
+    <RouteWithSidebar
+      exact
+      path={Routes.Testimonial.path}
+      component={Admin.Testimonial}
+    />
 
     <Redirect to={Routes.NotFound.path} />
   </Switch>
