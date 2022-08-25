@@ -46,6 +46,7 @@ export const Routes = {
 
   //Our admin
   Sidebar: { path: "/components/sidebar" },
+  CreatingSidebar: { path: "/components/creating-sidebar" },
   Admission: { path: "/components/admission" },
   About: { path: "/components/about" },
   Banner: { path: "/components/banner" },

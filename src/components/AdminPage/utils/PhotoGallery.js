@@ -1,6 +1,6 @@
 import React from "react";
-import Img from "./Img";
-import "./img.scss";
+import Img from "../Sidebar/Img";
+import "./choosePhoto.scss";
 
 const PhotoGallery = ({ setFile, setGallery, gallery }) => {
   const handleChange = (e) => {
@@ -9,6 +9,10 @@ const PhotoGallery = ({ setFile, setGallery, gallery }) => {
       setFile((prevState) => [...prevState, files[i]]);
       setGallery((prevState) => [...prevState, URL.createObjectURL(files[i])]);
     }
+  };
+
+  const handleDelete = (imageUrl) => {
+    setGallery((prevState) => prevState.filter((image) => image !== imageUrl));
   };
 
   return (
@@ -20,7 +24,7 @@ const PhotoGallery = ({ setFile, setGallery, gallery }) => {
         </div>
       </div>
       {gallery.map((image) => (
-        <Img photo={image} key={image} />
+        <Img photo={image} onDelete={handleDelete} key={image} />
       ))}
     </div>
   );

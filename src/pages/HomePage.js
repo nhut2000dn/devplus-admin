@@ -3,7 +3,6 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { Routes } from "../routes";
 
 // pages
-import Presentation from "./Presentation";
 import Upgrade from "./Upgrade";
 import DashboardOverview from "./dashboard/DashboardOverview";
 import Transactions from "./Transactions";
@@ -48,6 +47,7 @@ import Tables from "./components/Tables";
 import Tabs from "./components/Tabs";
 import Tooltips from "./components/Tooltips";
 import Toasts from "./components/Toasts";
+
 import Admin from "../components/AdminPage";
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
@@ -231,6 +231,11 @@ export default () => (
       exact
       path={Routes.Sidebar.path}
       component={Admin.Sidebar}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.CreatingSidebar.path}
+      component={Admin.CreatingSidebar}
     />
     <RouteWithSidebar
       exact
