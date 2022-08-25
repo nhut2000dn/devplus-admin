@@ -260,6 +260,11 @@ export default () => (
     />
     <RouteWithSidebar
       exact
+      path={Routes.CreatingConcern.path}
+      component={Admin.CreatingConcern}
+    />
+    <RouteWithSidebar
+      exact
       path={Routes.Footer.path}
       component={Admin.Footer}
     />

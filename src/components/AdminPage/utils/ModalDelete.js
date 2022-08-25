@@ -1,11 +1,11 @@
 import React from "react";
 import { Button, Modal } from "@themesberg/react-bootstrap";
 
-const ModalDelete = ({ showDefault, handleDelete, handleClose }) => {
+const ModalDelete = ({ showDefault, handleDelete, handleClose, name }) => {
   return (
     <Modal as={Modal.Dialog} centered show={showDefault} onHide={handleClose}>
       <Modal.Header>
-        <Modal.Title className="h6">Delete existing sidebar</Modal.Title>
+        <Modal.Title className="h6">Delete existing {name}</Modal.Title>
         <Button variant="close" aria-label="Close" onClick={handleClose} />
       </Modal.Header>
       <Modal.Body>

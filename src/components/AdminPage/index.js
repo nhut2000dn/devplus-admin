@@ -8,6 +8,7 @@ import Sidebar from "./Sidebar/index";
 import Skill from "./Skill/";
 import Testimonial from "./Testimonial/";
 import CreatingSidebar from "./CreatingSidebar";
+import CreatingConcern from "./CreatingConcern";
 
 export default {
   Admission,
@@ -20,4 +21,5 @@ export default {
   Skill,
   Testimonial,
   CreatingSidebar,
+  CreatingConcern,
 };

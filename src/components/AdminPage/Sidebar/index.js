@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Col, Row, Container, Button } from "@themesberg/react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { GeneralInfoForm } from "./FormSidebar";
+import FormSidebar from "./FormSidebar";
 import { useHistory } from "react-router-dom";
 
 const Sidebar = () => {
+  const [disableAdd, setDisableAdd] = useState(false);
+
   const history = useHistory();
 
   return (
@@ -19,6 +21,7 @@ const Sidebar = () => {
                 onClick={() => history.push("/components/creating-sidebar")}
                 variant="secondary"
                 className="text-dark me-2"
+                disabled={disableAdd}
               >
                 <FontAwesomeIcon icon={faPlus} className="me-2" />
                 <span>New</span>
@@ -28,7 +31,7 @@ const Sidebar = () => {
         </Row>
         <Row>
           <Col>
-            <GeneralInfoForm />
+            <FormSidebar setDisableAdd={setDisableAdd} />
           </Col>
         </Row>
       </Container>

@@ -52,6 +52,7 @@ export const Routes = {
   Banner: { path: "/components/banner" },
   Campus: { path: "/components/campus" },
   Concern: { path: "/components/concern" },
+  CreatingConcern: { path: "/components/creating-concern" },
   Footer: { path: "/components/footer" },
   Skill: { path: "/components/skill" },
   Testimonial: { path: "/components/testimonial" },
