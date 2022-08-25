@@ -11,6 +11,6 @@ export const client = axios.create({
   },
 });
 
-export const getStudents = async () => {
-  return await client.get("/students");
+export const getSidebar = async () => {
+  return await client.get("/sidebar");
 };
