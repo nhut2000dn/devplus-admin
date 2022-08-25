@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_ROOT = "http://localhost:5000";
+const API_ROOT = "https://devplus-api.herokuapp.com";
 
 export const client = axios.create({
   baseURL: API_ROOT,
@@ -16,4 +16,8 @@ export const getSidebar = async () => {
 
 export const getConcern = async () => {
   return await client.get("/concern");
+};
+
+export const getBanner = async () => {
+  return await client.get("/banner");
 };
