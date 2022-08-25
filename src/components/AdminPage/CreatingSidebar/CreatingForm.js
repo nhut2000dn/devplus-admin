@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Col, Row, Card, Form, Button } from "@themesberg/react-bootstrap";
 import ChoosePhoto from "../utils/ChoosePhoto";
 import PhotoGallery from "../utils/PhotoGallery";
-import { client, getSidebar } from "../../../service/baseApi";
+import { client } from "../../../service/baseApi";
 import {
   uploadMultipleImages,
   uploadSingleImage,
 } from "../../../service/uploadImage";
-import ModalDelete from "./ModalDelete";
 
-export const GeneralInfoForm = () => {
+const CreatingForm = () => {
   const [desc, setDesc] = useState("");
+  const [socialIcon, setSocialIcon] = useState("");
   const [logoFile, setLogoFile] = useState(null);
   const [mapFile, setMapFile] = useState(null);
   const [logo, setLogo] = useState(
@@ -21,82 +21,53 @@ export const GeneralInfoForm = () => {
   );
   const [galleryFile, setGalleryFile] = useState([]);
   const [gallery, setGallery] = useState([]);
-  const [id, setId] = useState(null);
-  const [showDefault, setShowDefault] = useState(false);
-  const [disableUpdate, setDisableUpdate] = useState(false);
-
-  const handleClose = () => setShowDefault(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await getSidebar();
-      const sidebar = data[0];
-      if (sidebar) {
-        setDesc(sidebar.desc);
-        setLogo(sidebar.logoImg);
-        setGallery([...sidebar.gallery]);
-        setMap(sidebar.mapImg);
-        setId(sidebar._id);
-      } else {
-        setDisableUpdate(true);
-      }
-    };
-    fetchData();
-  }, []);
 
   const handleChangeDesc = (e) => {
     setDesc(e.target.value);
   };
 
+  const handleChangeSocial = (e) => {
+    setSocialIcon(e.target.value);
+  };
+
   const handleClickSave = async (e) => {
     e.preventDefault();
 
-    let updatedSidebar = {
+    let newSidebar = {
       desc: desc,
       logoImg: logo,
       gallery: gallery,
       mapImg: map,
+      socialIcon: socialIcon,
     };
 
     if (logoFile) {
       const newLogo = await uploadSingleImage(logoFile);
-      updatedSidebar = { ...updatedSidebar, logoImg: newLogo };
+      newSidebar = { ...newSidebar, logoImg: newLogo };
     }
 
     if (galleryFile) {
       const newGallery = await uploadMultipleImages(galleryFile);
       const oldGallery = gallery.slice(0, gallery.length - newGallery.length);
       console.log(oldGallery);
-      updatedSidebar = {
-        ...updatedSidebar,
+      newSidebar = {
+        ...newSidebar,
         gallery: [...oldGallery, ...newGallery],
       };
     }
 
     if (mapFile) {
       const newMap = await uploadSingleImage(mapFile);
-      updatedSidebar = { ...updatedSidebar, mapImg: newMap };
+      newSidebar = { ...newSidebar, mapImg: newMap };
     }
 
-    const res = await client.put(`/sidebar/${id}`, updatedSidebar);
+    console.log(newSidebar);
+
+    const res = await client.post("/sidebar", newSidebar);
     setDesc(res.data.desc);
     setLogo(res.data.logoImg);
     setGallery(res.data.gallery);
     setMap(res.data.mapImg);
-  };
-
-  const handleClickDelete = async () => {
-    await client.delete(`/sidebar/${id}`);
-    setDesc("");
-    setLogo(
-      "https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25logo-placeholder.png?alt=media&token=db37a0c6-9b95-49c0-965c-a0a6920c9e6e"
-    );
-    setGallery([]);
-    setMap(
-      "https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25map-placeholder.jpg?alt=media&token=a441efac-d452-4655-b872-ec9e308d3a74"
-    );
-    setShowDefault(false);
-    setDisableUpdate(true);
   };
 
   return (
@@ -150,26 +121,29 @@ export const GeneralInfoForm = () => {
               </Form.Group>
             </Col>
           </Row>
+          <Row>
+            <Col md={12} className="mb-3">
+              <Form.Group id="social">
+                <Form.Label>Social Icon</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="socialIcon"
+                  onChange={handleChangeSocial}
+                  value={socialIcon}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
           <div className="mt-3 d-flex justify-content-between">
-            <Button
-              onClick={handleClickSave}
-              variant="primary"
-              type="submit"
-              disabled={disableUpdate}
-            >
-              Save All
+            <Button onClick={handleClickSave} variant="primary" type="submit">
+              Upload
             </Button>
-            <Button variant="danger" onClick={() => setShowDefault(true)}>
-              Delete
-            </Button>
-            <ModalDelete
-              showDefault={showDefault}
-              handleDelete={handleClickDelete}
-              handleClose={handleClose}
-            />
           </div>
         </Form>
       </Card.Body>
     </Card>
   );
 };
+
+export default CreatingForm;

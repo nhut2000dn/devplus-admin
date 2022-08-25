@@ -7,6 +7,7 @@ import Footer from "./Footer/";
 import Sidebar from "./Sidebar/index";
 import Skill from "./Skill/";
 import Testimonial from "./Testimonial/";
+import CreatingSidebar from "./CreatingSidebar";
 
 export default {
   Admission,
@@ -18,4 +19,5 @@ export default {
   Sidebar,
   Skill,
   Testimonial,
+  CreatingSidebar,
 };

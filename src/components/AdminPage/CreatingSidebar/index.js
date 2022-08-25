@@ -1,11 +1,11 @@
 import React from "react";
 import { Col, Row, Container, Button } from "@themesberg/react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { GeneralInfoForm } from "./FormSidebar";
+import { faArrowAltCircleLeft } from "@fortawesome/free-solid-svg-icons";
+import CreatingForm from "./CreatingForm";
 import { useHistory } from "react-router-dom";
 
-const Sidebar = () => {
+const CreatingSidebar = () => {
   const history = useHistory();
 
   return (
@@ -14,21 +14,21 @@ const Sidebar = () => {
         <Row className="d-flex flex-wrap flex-md-nowrap align-items-center py-4">
           <Col className="d-block mb-4 mb-md-0">
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-              <h1 className="h2">Sidebar</h1>
+              <h1 className="h2">Creating New Sidebar</h1>
               <Button
-                onClick={() => history.push("/components/creating-sidebar")}
                 variant="secondary"
+                onClick={() => history.push("/components/sidebar")}
                 className="text-dark me-2"
               >
-                <FontAwesomeIcon icon={faPlus} className="me-2" />
-                <span>New</span>
+                <FontAwesomeIcon icon={faArrowAltCircleLeft} className="me-2" />
+                <span>Back</span>
               </Button>
             </div>
           </Col>
         </Row>
         <Row>
           <Col>
-            <GeneralInfoForm />
+            <CreatingForm />
           </Col>
         </Row>
       </Container>
@@ -36,4 +36,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default CreatingSidebar;
