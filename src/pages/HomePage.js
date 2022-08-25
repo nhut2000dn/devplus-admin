@@ -250,6 +250,11 @@ export default () => (
     />
     <RouteWithSidebar
       exact
+      path={Routes.CreatingBanner.path}
+      component={Admin.CreatingBanner}
+    />
+    <RouteWithSidebar
+      exact
       path={Routes.Campus.path}
       component={Admin.Campus}
     />
@@ -257,6 +262,11 @@ export default () => (
       exact
       path={Routes.Concern.path}
       component={Admin.Concern}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.CreatingConcern.path}
+      component={Admin.CreatingConcern}
     />
     <RouteWithSidebar
       exact

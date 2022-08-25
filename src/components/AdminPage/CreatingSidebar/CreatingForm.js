@@ -7,6 +7,7 @@ import {
   uploadMultipleImages,
   uploadSingleImage,
 } from "../../../service/uploadImage";
+import { useHistory } from "react-router-dom";
 
 const CreatingForm = () => {
   const [desc, setDesc] = useState("");
@@ -21,6 +22,8 @@ const CreatingForm = () => {
   );
   const [galleryFile, setGalleryFile] = useState([]);
   const [gallery, setGallery] = useState([]);
+
+  const history = useHistory();
 
   const handleChangeDesc = (e) => {
     setDesc(e.target.value);
@@ -61,13 +64,8 @@ const CreatingForm = () => {
       newSidebar = { ...newSidebar, mapImg: newMap };
     }
 
-    console.log(newSidebar);
-
-    const res = await client.post("/sidebar", newSidebar);
-    setDesc(res.data.desc);
-    setLogo(res.data.logoImg);
-    setGallery(res.data.gallery);
-    setMap(res.data.mapImg);
+    await client.post("/sidebar", newSidebar);
+    history.push("/components/sidebar");
   };
 
   return (

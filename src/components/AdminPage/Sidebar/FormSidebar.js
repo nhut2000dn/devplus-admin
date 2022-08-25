@@ -7,9 +7,9 @@ import {
   uploadMultipleImages,
   uploadSingleImage,
 } from "../../../service/uploadImage";
-import ModalDelete from "./ModalDelete";
+import ModalDelete from "../utils/ModalDelete";
 
-export const GeneralInfoForm = () => {
+const FormSidebar = ({ setDisableAdd }) => {
   const [desc, setDesc] = useState("");
   const [logoFile, setLogoFile] = useState(null);
   const [mapFile, setMapFile] = useState(null);
@@ -37,12 +37,13 @@ export const GeneralInfoForm = () => {
         setGallery([...sidebar.gallery]);
         setMap(sidebar.mapImg);
         setId(sidebar._id);
+        setDisableAdd(true);
       } else {
         setDisableUpdate(true);
       }
     };
     fetchData();
-  }, []);
+  }, [setDisableAdd]);
 
   const handleChangeDesc = (e) => {
     setDesc(e.target.value);
@@ -97,6 +98,7 @@ export const GeneralInfoForm = () => {
     );
     setShowDefault(false);
     setDisableUpdate(true);
+    setDisableAdd(false);
   };
 
   return (
@@ -166,6 +168,7 @@ export const GeneralInfoForm = () => {
               showDefault={showDefault}
               handleDelete={handleClickDelete}
               handleClose={handleClose}
+              name="sidebar"
             />
           </div>
         </Form>
@@ -173,3 +176,5 @@ export const GeneralInfoForm = () => {
     </Card>
   );
 };
+
+export default FormSidebar;

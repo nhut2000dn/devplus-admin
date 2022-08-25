@@ -1,21 +1,12 @@
-import React, { useState } from "react";
-import {
-  Col,
-  Row,
-  Card,
-  Form,
-  Container,
-  InputGroup,
-  Button,
-} from "@themesberg/react-bootstrap";
+import React from "react";
+import { Col, Row, Container, Button } from "@themesberg/react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { GeneralInfoForm } from "./FormBanner";
+import { faArrowAltCircleLeft } from "@fortawesome/free-solid-svg-icons";
+import CreatingForm from "./CreatingForm";
 import { useHistory } from "react-router-dom";
 
-const Banner = () => {
+const CreatingBanner = () => {
   const history = useHistory();
-  const [disableNew, setDisableNew] = useState(false);
 
   return (
     <article>
@@ -23,22 +14,21 @@ const Banner = () => {
         <Row className="d-flex flex-wrap flex-md-nowrap align-items-center py-4">
           <Col className="d-block mb-4 mb-md-0">
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-              <h1 className="h2">Banner</h1>
+              <h1 className="h2">Creating New Banner</h1>
               <Button
-                onClick={() => history.push("/components/creating-banner")}
                 variant="secondary"
+                onClick={() => history.push("/components/banner")}
                 className="text-dark me-2"
-                disabled={disableNew}
               >
-                <FontAwesomeIcon icon={faPlus} className="me-2" />
-                <span>New</span>
+                <FontAwesomeIcon icon={faArrowAltCircleLeft} className="me-2" />
+                <span>Back</span>
               </Button>
             </div>
           </Col>
         </Row>
         <Row>
           <Col>
-            <GeneralInfoForm setDisable={setDisableNew} />
+            <CreatingForm />
           </Col>
         </Row>
       </Container>
@@ -46,4 +36,4 @@ const Banner = () => {
   );
 };
 
-export default Banner;
+export default CreatingBanner;
