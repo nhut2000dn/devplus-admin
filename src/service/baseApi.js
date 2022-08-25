@@ -13,3 +13,7 @@ export const client = axios.create({
 export const getSidebar = async () => {
   return await client.get("/sidebar");
 };
+
+export const getConcern = async () => {
+  return await client.get("/concern");
+};
