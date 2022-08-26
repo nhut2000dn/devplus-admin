@@ -12,6 +12,7 @@ import CreatingConcern from "./CreatingConcern";
 import CreatingBanner from "./CreatingBanner";
 import CreatingAbout from "./CreatingAbout";
 import CreatingTestimonial from "./CreatingTestimonial";
+import CreatingAdmission from "./CreatingAdmission";
 
 export default {
   Admission,
@@ -28,4 +29,5 @@ export default {
   CreatingBanner,
   CreatingAbout,
   CreatingTestimonial,
+  CreatingAdmission,
 };

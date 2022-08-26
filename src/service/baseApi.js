@@ -24,7 +24,13 @@ export const getBanner = async () => {
 
 export const getAbout = async () => {
   return await client.get("/about");
+};
 
 export const getTestimonial = async () => {
   return await client.get("/testimonial");
+};
+
+export const getAdmission = async () => {
+  return await client.get("/admission");
+
 };

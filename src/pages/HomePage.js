@@ -242,6 +242,11 @@ export default () => (
       path={Routes.Admission.path}
       component={Admin.Admission}
     />
+    <RouteWithSidebar
+      exact
+      path={Routes.CreatingAdmission.path}
+      component={Admin.CreatingAdmission}
+    />
     <RouteWithSidebar exact path={Routes.About.path} component={Admin.About} />
     <RouteWithSidebar
       exact

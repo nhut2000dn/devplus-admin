@@ -48,6 +48,7 @@ export const Routes = {
   Sidebar: { path: "/components/sidebar" },
   CreatingSidebar: { path: "/components/creating-sidebar" },
   Admission: { path: "/components/admission" },
+  CreatingAdmission: { path: "/components/creating-admission" },
   About: { path: "/components/about" },
   CreatingAbout: { path: "/components/creating-about" },
   Banner: { path: "/components/banner" },
