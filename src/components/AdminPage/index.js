@@ -10,7 +10,11 @@ import Testimonial from "./Testimonial/";
 import CreatingSidebar from "./CreatingSidebar";
 import CreatingConcern from "./CreatingConcern";
 import CreatingBanner from "./CreatingBanner";
+<<<<<<< Updated upstream
 import CreatingTestimonial from "./CreatingTestimonial";
+=======
+import CreatingAdmission from "./CreatingAdmission";
+>>>>>>> Stashed changes
 
 export default {
   Admission,
@@ -25,5 +29,9 @@ export default {
   CreatingSidebar,
   CreatingConcern,
   CreatingBanner,
+<<<<<<< Updated upstream
   CreatingTestimonial,
+=======
+  CreatingAdmission,
+>>>>>>> Stashed changes
 };
