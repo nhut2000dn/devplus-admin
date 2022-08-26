@@ -279,7 +279,11 @@ export default () => (
       path={Routes.Testimonial.path}
       component={Admin.Testimonial}
     />
-
+    <RouteWithSidebar
+      exact
+      path={Routes.CreatingTestimonial.path}
+      component={Admin.CreatingTestimonial}
+    />
     <Redirect to={Routes.NotFound.path} />
   </Switch>
 );

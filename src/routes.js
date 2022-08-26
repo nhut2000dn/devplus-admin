@@ -56,5 +56,6 @@ export const Routes = {
   CreatingConcern: { path: "/components/creating-concern" },
   Footer: { path: "/components/footer" },
   Skill: { path: "/components/skill" },
+  CreatingTestimonial: { path: "/components/creating-testimonial" },
   Testimonial: { path: "/components/testimonial" },
 };

@@ -25,11 +25,11 @@ const FormConcern = ({ setDisableAdd }) => {
   const handleChangeItemTable = (event, id) => {
     const { value, name } = event.target;
     setConcerns((prevState) =>
-      prevState.map((concern) => {
-        if (concern._id === id) {
-          return { ...concern, [name]: value };
+      prevState.map((testimonial) => {
+        if (testimonial._id === id) {
+          return { ...testimonial, [name]: value };
         }
-        return concern;
+        return testimonial;
       })
     );
   };
