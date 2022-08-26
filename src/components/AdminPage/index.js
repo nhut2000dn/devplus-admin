@@ -11,6 +11,7 @@ import CreatingSidebar from "./CreatingSidebar";
 import CreatingConcern from "./CreatingConcern";
 import CreatingBanner from "./CreatingBanner";
 import CreatingAbout from "./CreatingAbout";
+import CreatingTestimonial from "./CreatingTestimonial";
 
 export default {
   Admission,
@@ -26,4 +27,5 @@ export default {
   CreatingConcern,
   CreatingBanner,
   CreatingAbout,
+  CreatingTestimonial,
 };
