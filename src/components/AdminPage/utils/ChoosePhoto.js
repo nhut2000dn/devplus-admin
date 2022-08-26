@@ -5,8 +5,10 @@ import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
 
 const ChoosePhoto = ({ setFile, setImg, photo }) => {
   const handleChange = (e) => {
-    setFile(e.target.files[0]);
-    setImg(URL.createObjectURL(e.target.files[0]));
+    if (e.target.files[0]) {
+      setFile(e.target.files[0]);
+      setImg(URL.createObjectURL(e.target.files[0]));
+    }
   };
 
   return (

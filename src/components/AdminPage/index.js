@@ -10,6 +10,7 @@ import Testimonial from "./Testimonial/";
 import CreatingSidebar from "./CreatingSidebar";
 import CreatingConcern from "./CreatingConcern";
 import CreatingBanner from "./CreatingBanner";
+import CreatingAbout from "./CreatingAbout";
 import CreatingTestimonial from "./CreatingTestimonial";
 
 export default {
@@ -25,5 +26,6 @@ export default {
   CreatingSidebar,
   CreatingConcern,
   CreatingBanner,
+  CreatingAbout,
   CreatingTestimonial,
 };
