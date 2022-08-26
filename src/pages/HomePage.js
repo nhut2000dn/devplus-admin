@@ -3,7 +3,6 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { Routes } from "../routes";
 
 // pages
-import Presentation from "./Presentation";
 import Upgrade from "./Upgrade";
 import DashboardOverview from "./dashboard/DashboardOverview";
 import Transactions from "./Transactions";
@@ -48,6 +47,7 @@ import Tables from "./components/Tables";
 import Tabs from "./components/Tabs";
 import Tooltips from "./components/Tooltips";
 import Toasts from "./components/Toasts";
+
 import Admin from "../components/AdminPage";
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
@@ -234,14 +234,34 @@ export default () => (
     />
     <RouteWithSidebar
       exact
+      path={Routes.CreatingSidebar.path}
+      component={Admin.CreatingSidebar}
+    />
+    <RouteWithSidebar
+      exact
       path={Routes.Admission.path}
       component={Admin.Admission}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.CreatingAdmission.path}
+      component={Admin.CreatingAdmission}
     />
     <RouteWithSidebar exact path={Routes.About.path} component={Admin.About} />
     <RouteWithSidebar
       exact
+      path={Routes.CreatingAbout.path}
+      component={Admin.CreatingAbout}
+    />
+    <RouteWithSidebar
+      exact
       path={Routes.Banner.path}
       component={Admin.Banner}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.CreatingBanner.path}
+      component={Admin.CreatingBanner}
     />
     <RouteWithSidebar
       exact
@@ -255,6 +275,11 @@ export default () => (
     />
     <RouteWithSidebar
       exact
+      path={Routes.CreatingConcern.path}
+      component={Admin.CreatingConcern}
+    />
+    <RouteWithSidebar
+      exact
       path={Routes.Footer.path}
       component={Admin.Footer}
     />
@@ -264,7 +289,11 @@ export default () => (
       path={Routes.Testimonial.path}
       component={Admin.Testimonial}
     />
-
+    <RouteWithSidebar
+      exact
+      path={Routes.CreatingTestimonial.path}
+      component={Admin.CreatingTestimonial}
+    />
     <Redirect to={Routes.NotFound.path} />
   </Switch>
 );

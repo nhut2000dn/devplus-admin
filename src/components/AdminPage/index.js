@@ -7,6 +7,12 @@ import Footer from "./Footer/";
 import Sidebar from "./Sidebar/index";
 import Skill from "./Skill/";
 import Testimonial from "./Testimonial/";
+import CreatingSidebar from "./CreatingSidebar";
+import CreatingConcern from "./CreatingConcern";
+import CreatingBanner from "./CreatingBanner";
+import CreatingAbout from "./CreatingAbout";
+import CreatingTestimonial from "./CreatingTestimonial";
+import CreatingAdmission from "./CreatingAdmission";
 
 export default {
   Admission,
@@ -18,4 +24,10 @@ export default {
   Sidebar,
   Skill,
   Testimonial,
+  CreatingSidebar,
+  CreatingConcern,
+  CreatingBanner,
+  CreatingAbout,
+  CreatingTestimonial,
+  CreatingAdmission,
 };

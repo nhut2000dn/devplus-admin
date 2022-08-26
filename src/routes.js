@@ -46,12 +46,18 @@ export const Routes = {
 
   //Our admin
   Sidebar: { path: "/components/sidebar" },
+  CreatingSidebar: { path: "/components/creating-sidebar" },
   Admission: { path: "/components/admission" },
+  CreatingAdmission: { path: "/components/creating-admission" },
   About: { path: "/components/about" },
+  CreatingAbout: { path: "/components/creating-about" },
   Banner: { path: "/components/banner" },
+  CreatingBanner: { path: "/components/creating-banner" },
   Campus: { path: "/components/campus" },
   Concern: { path: "/components/concern" },
+  CreatingConcern: { path: "/components/creating-concern" },
   Footer: { path: "/components/footer" },
   Skill: { path: "/components/skill" },
+  CreatingTestimonial: { path: "/components/creating-testimonial" },
   Testimonial: { path: "/components/testimonial" },
 };
