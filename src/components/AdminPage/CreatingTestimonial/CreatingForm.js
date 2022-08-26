@@ -74,7 +74,7 @@ const CreatingForm = () => {
     };
 
     const postData = async (objData) => {
-      await client.put("/testimonial/", objData);
+      await client.post("/testimonial", objData);
       history.push("/components/testimonial");
     };
 
@@ -114,7 +114,7 @@ const CreatingForm = () => {
         className="bg-white shadow-sm mb-4 table-wrapper table-responsive shadow-sm"
       >
         <Card.Body>
-          <h5 className="mb-4">testimonial Content</h5>
+          <h5 className="mb-4">Testimonial Content</h5>
           <TableTestimonial
             testimonials={testimonials}
             setFileArray={setFileArray}

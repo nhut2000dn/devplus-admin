@@ -16,7 +16,7 @@ const FormTestimonial = ({ setDisableAdd }) => {
     "https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25logo-placeholder.png?alt=media&token=db37a0c6-9b95-49c0-965c-a0a6920c9e6e"
   );
   const [imageFile, setImageFile] = useState(null);
-
+  const [imageUpLoadArray, setImageUploadArray] = useState([]);
   const [fileArray, setFileArray] = useState([]);
   const [imageArray, setImageArray] = useState([]);
 
@@ -55,6 +55,10 @@ const FormTestimonial = ({ setDisableAdd }) => {
       setImage(
         "https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25logo-placeholder.png?alt=media&token=db37a0c6-9b95-49c0-965c-a0a6920c9e6e"
       );
+      setImageUploadArray((prevState) => [
+        ...prevState,
+        { index: testimonials.length - 1, file: imageFile },
+      ]);
     }
   };
 
@@ -97,33 +101,37 @@ const FormTestimonial = ({ setDisableAdd }) => {
       setTestimonials(res.data.testimonials);
     };
 
-    if (imageFile) {
-      const newImage = await uploadSingleImage(imageFile);
-      updatedTestimonial.testimonials[testimonials.length - 1].img = newImage;
+    const changeData = async (fileArray) => {
+      const promises = fileArray.map((arr) => {
+        return new Promise((resolve, reject) => {
+          uploadSingleImage(arr.file).then((img) =>
+            resolve({ ...arr, img: img })
+          );
+        });
+      });
+
+      return Promise.all(promises).then((result) => result);
+    };
+
+    if (imageUpLoadArray) {
+      const newUpload = await changeData(imageUpLoadArray);
+      newUpload.forEach((updatedObj) => {
+        updatedTestimonial.testimonials[updatedObj.index].img = updatedObj.img;
+      });
     }
 
     if (fileArray) {
-      (async function () {
-        const promises = fileArray.map(async (file) => {
-          const updateImage = await uploadSingleImage(file.file);
-          return { img: updateImage, _id: file._id };
-        });
-
-        const promisesResult = await Promise.all(promises);
-
-        promisesResult.forEach((updatedObj) => {
-          const index = updatedTestimonial.testimonials.findIndex(
-            (obj) => obj._id === updatedObj._id
-          );
-          if (index > -1) {
-            updatedTestimonial.testimonials[index].img = updatedObj.img;
-          }
-        });
-        putData(id, updatedTestimonial);
-      })();
-    } else {
-      putData(id, updatedTestimonial);
+      const newUpload = await changeData(fileArray);
+      newUpload.forEach((updatedObj) => {
+        const index = updatedTestimonial.testimonials.findIndex(
+          (obj) => obj._id === updatedObj._id
+        );
+        if (index > -1) {
+          updatedTestimonial.testimonials[index].img = updatedObj.img;
+        }
+      });
     }
+    putData(id, updatedTestimonial);
   };
 
   const handleClickDelete = async () => {
