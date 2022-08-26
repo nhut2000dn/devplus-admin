@@ -37,3 +37,7 @@ export const getAdmission = async () => {
   return await client.get("/admission");
 
 };
+
+export const getCampus = async () => {
+  return await client.get("/campus");
+};
