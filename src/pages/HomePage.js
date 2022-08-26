@@ -245,6 +245,11 @@ export default () => (
     <RouteWithSidebar exact path={Routes.About.path} component={Admin.About} />
     <RouteWithSidebar
       exact
+      path={Routes.CreatingAbout.path}
+      component={Admin.CreatingAbout}
+    />
+    <RouteWithSidebar
+      exact
       path={Routes.Banner.path}
       component={Admin.Banner}
     />
