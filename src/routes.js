@@ -50,6 +50,7 @@ export const Routes = {
   Admission: { path: "/components/admission" },
   CreatingAdmission: { path: "/components/creating-admission" },
   About: { path: "/components/about" },
+  CreatingAbout: { path: "/components/creating-about" },
   Banner: { path: "/components/banner" },
   CreatingBanner: { path: "/components/creating-banner" },
   Campus: { path: "/components/campus" },
