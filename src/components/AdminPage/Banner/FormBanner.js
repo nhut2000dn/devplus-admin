@@ -124,7 +124,7 @@ export const GeneralInfoForm = ({setDisable}) => {
                   isInvalid={isValidDesc} 
                   name="desc"
                   as="textarea" 
-                  rows="1"
+                  rows="3"
                   disabled={disableDelete}
                   onChange={handleChangeDesc}
                   value={desc}
