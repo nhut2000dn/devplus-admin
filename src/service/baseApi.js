@@ -41,3 +41,11 @@ export const getAdmission = async () => {
 export const getCampus = async () => {
   return await client.get("/campus");
 };
+
+export const getUsers = async () => {
+	return await client.get('/user');
+};
+
+export const getUserById = async (id) => {
+	return await client.get(`/user/${ id }`);
+};

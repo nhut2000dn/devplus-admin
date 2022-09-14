@@ -5,6 +5,8 @@ import { client } from "../../../service/baseApi";
 import { uploadSingleImage } from "../../../service/uploadImage";
 import TableConcern from "../Concern/TableConcern";
 import { useHistory } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreatingForm = () => {
   const [concerns, setConcerns] = useState([]);
@@ -44,20 +46,29 @@ const CreatingForm = () => {
 
   const handleClickSave = async (e) => {
     e.preventDefault();
-
-    let updatedConcern = {
-      concerns,
-      img: image,
-      video: videoId,
-    };
-
-    if (imageFile) {
-      const newImage = await uploadSingleImage(imageFile);
-      updatedConcern = { ...updatedConcern, img: newImage };
+    try {
+      const id = toast("Creating in progress, please wait", {autoClose: false })
+      let updatedConcern = {
+        concerns,
+        img: image,
+        video: videoId,
+      };
+  
+      if (imageFile) {
+        const newImage = await uploadSingleImage(imageFile);
+        updatedConcern = { ...updatedConcern, img: newImage };
+      }
+  
+      await client.post("/concern", updatedConcern);
+      toast.update(id, { 
+        type: "success",
+        render: "Creating concern success",
+        autoClose: 2000,
+        onClose: () => history.push("/components/concern")
+      });
+    } catch (error) {
+      console.log(error)
     }
-
-    await client.post("/concern", updatedConcern);
-    history.push("/components/concern");
   };
 
   return (
@@ -158,6 +169,7 @@ const CreatingForm = () => {
             </div>
           </Form>
         </Card.Body>
+        <ToastContainer position="top-center" />
       </Card>
     </>
   );

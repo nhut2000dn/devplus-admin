@@ -5,6 +5,8 @@ import { client, getCampus } from "../../../service/baseApi";
 import { uploadSingleImage } from "../../../service/uploadImage";
 import TableCampus from "./TableCampus";
 import ModalDelete from "../utils/ModalDelete";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FormCampus = ({ setDisableAdd }) => {
   const [campus, setCampus] = useState([]);
@@ -87,58 +89,83 @@ const FormCampus = ({ setDisableAdd }) => {
 
   const handleClickSave = async (e) => {
     e.preventDefault();
-
-    let updatedCampus = {
-      campus,
-    };
-
-    const putData = async (id, objData) => {
-      const res = await client.put(`/campus/${id}`, objData);
-      setCampus(res.data.campus);
-    };
-
-    const changeData = async (fileArray) => {
-      const promises = fileArray.map((arr) => {
-        return new Promise((resolve, reject) => {
-          uploadSingleImage(arr.file).then((img) =>
-            resolve({ ...arr, img: img })
-          );
+    const idToast = toast("Updating in progress, please wait", {autoClose: false })
+    try {
+      let updatedCampus = {
+        campus,
+      };
+  
+      const putData = async (id, objData) => {
+        const res = await client.put(`/campus/${id}`, objData);
+        setCampus(res.data.campus);
+      };
+  
+      const changeData = async (fileArray) => {
+        const promises = fileArray.map((arr) => {
+          return new Promise((resolve, reject) => {
+            uploadSingleImage(arr.file).then((img) =>
+              resolve({ ...arr, img: img })
+            );
+          });
         });
+  
+        return Promise.all(promises).then((result) => result);
+      };
+  
+      if (imageUpLoadArray) {
+        const newUpload = await changeData(imageUpLoadArray);
+        newUpload.forEach((updatedObj) => {
+          updatedCampus.items[updatedObj.index].img = updatedObj.img;
+        });
+      }
+  
+      if (fileArray) {
+        const newUpload = await changeData(fileArray);
+        newUpload.forEach((updatedObj) => {
+          const index = updatedCampus.items.findIndex(
+            (obj) => obj._id === updatedObj._id
+          );
+          if (index > -1) {
+            updatedCampus.items[index].img = updatedObj.img;
+          }
+        });
+      }
+      putData(id, updatedCampus);
+
+      toast.update(idToast, { 
+        type: "success",
+        render: "Update success",
+        autoClose: 2000,
       });
-
-      return Promise.all(promises).then((result) => result);
-    };
-
-    if (imageUpLoadArray) {
-      const newUpload = await changeData(imageUpLoadArray);
-      newUpload.forEach((updatedObj) => {
-        updatedCampus.items[updatedObj.index].img = updatedObj.img;
+    } catch (error) {
+      console.log(error)
+      toast.update(idToast, { 
+        type: "success",
+        render: "Update success",
+        autoClose: 2000,
       });
     }
-
-    if (fileArray) {
-      const newUpload = await changeData(fileArray);
-      newUpload.forEach((updatedObj) => {
-        const index = updatedCampus.items.findIndex(
-          (obj) => obj._id === updatedObj._id
-        );
-        if (index > -1) {
-          updatedCampus.items[index].img = updatedObj.img;
-        }
-      });
-    }
-    putData(id, updatedCampus);
   };
 
   const handleClickDelete = async () => {
-    await client.delete(`/campus/${id}`);
-    setCampus([]);
-    setImage(
-      "https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25logo-placeholder.png?alt=media&token=db37a0c6-9b95-49c0-965c-a0a6920c9e6e"
-    );
-    setShowDefault(false);
-    setDisableUpdate(true);
-    setDisableAdd(false);
+    try {
+      const idToast = toast("Deleting in progress, please wait", {autoClose: false })
+      await client.delete(`/campus/${id}`);
+      setCampus([]);
+      setImage(
+        "https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25logo-placeholder.png?alt=media&token=db37a0c6-9b95-49c0-965c-a0a6920c9e6e"
+      );
+      setShowDefault(false);
+      setDisableUpdate(true);
+      setDisableAdd(false);
+      toast.update(idToast, { 
+        type: "success",
+        render: "Delete success",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
@@ -226,6 +253,7 @@ const FormCampus = ({ setDisableAdd }) => {
             </div>
           </Form>
         </Card.Body>
+        <ToastContainer position="top-center" />
       </Card>
     </>
   );

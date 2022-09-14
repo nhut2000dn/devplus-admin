@@ -5,6 +5,8 @@ import { client } from "../../../service/baseApi";
 import { uploadSingleImage } from "../../../service/uploadImage";
 import TableCampus from "../Campus/TableCampus";
 import { useHistory } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreatingForm = () => {
   const [campus, setCampus] = useState([]);
@@ -65,41 +67,52 @@ const CreatingForm = () => {
   const handleClickSave = async (e) => {
     e.preventDefault();
 
-    let updatedCampus = {
-      campus,
-    };
-
-    const postData = async (objData) => {
-      await client.post("/campus", objData);
-      history.push("/components/campus");
-    };
-
-    if (imageFile) {
-      const newImage = await uploadSingleImage(imageFile);
-      updatedCampus.campuss[campus.length - 1].img = newImage;
-    }
-
-    if (fileArray) {
-      (async function () {
-        const promises = fileArray.map(async (file) => {
-          const updateImage = await uploadSingleImage(file.file);
-          return { img: updateImage, _id: file._id };
-        });
-
-        const promisesResult = await Promise.all(promises);
-
-        promisesResult.forEach((updatedObj) => {
-          const index = updatedCampus.campus.findIndex(
-            (obj) => obj._id === updatedObj._id
-          );
-          if (index > -1) {
-            updatedCampus.campus[index].img = updatedObj.img;
-          }
-        });
+    try {
+      const id = toast("Creating in progress, please wait", {autoClose: false })
+      let updatedCampus = {
+        campus,
+      };
+  
+      const postData = async (objData) => {
+        await client.post("/campus", objData);
+        history.push("/components/campus");
+      };
+  
+      if (imageFile) {
+        const newImage = await uploadSingleImage(imageFile);
+        updatedCampus.campuss[campus.length - 1].img = newImage;
+      }
+  
+      if (fileArray) {
+        (async function () {
+          const promises = fileArray.map(async (file) => {
+            const updateImage = await uploadSingleImage(file.file);
+            return { img: updateImage, _id: file._id };
+          });
+  
+          const promisesResult = await Promise.all(promises);
+  
+          promisesResult.forEach((updatedObj) => {
+            const index = updatedCampus.campus.findIndex(
+              (obj) => obj._id === updatedObj._id
+            );
+            if (index > -1) {
+              updatedCampus.campus[index].img = updatedObj.img;
+            }
+          });
+          postData(updatedCampus);
+        })();
+      } else {
         postData(updatedCampus);
-      })();
-    } else {
-      postData(updatedCampus);
+      }
+      toast.update(id, { 
+        type: "success",
+        render: "Creating campus success",
+        autoClose: 2000,
+        onClose: () => history.push("/components/campus")
+      });
+    } catch (error) {
+      console.log(error)
     }
   };
 
@@ -174,6 +187,7 @@ const CreatingForm = () => {
             </div>
           </Form>
         </Card.Body>
+        <ToastContainer position="top-center" />
       </Card>
     </>
   );

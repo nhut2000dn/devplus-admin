@@ -5,6 +5,8 @@ import { Col, Row, Card, Form, Button } from '@themesberg/react-bootstrap';
 import { uploadSingleImage } from '../../../service/uploadImage';
 import ChoosePhoto from '../utils/ChoosePhoto';
 import ModalDelete from '../utils/ModalDelete';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FormSkill = ({ setDisableAdd }) => {
 	const [container, setContainer] = useState([]);
@@ -84,53 +86,74 @@ const FormSkill = ({ setDisableAdd }) => {
 	const handleClickSave = async (e) => {
 		e.preventDefault();
 
-		let updatedContainer = {
-			container,
-		};
-
-		const putData = async (id, objData) => {
-			const res = await client.put(`/skill/${id}`, objData);
-			setContainer(res.data.container);
-		};
-
-		const changeData = async (fileArray) => {
-			const promises = fileArray.map((arr) => {
-				return new Promise((resolve, reject) => {
-					uploadSingleImage(arr.file).then((image) => resolve({ ...arr, image: image }));
+    try {
+      const idToast = toast("Updating in progress, please wait", {autoClose: false })
+			let updatedContainer = {
+				container,
+			};
+	
+			const putData = async (id, objData) => {
+				const res = await client.put(`/skill/${id}`, objData);
+				setContainer(res.data.container);
+			};
+	
+			const changeData = async (fileArray) => {
+				const promises = fileArray.map((arr) => {
+					return new Promise((resolve, reject) => {
+						uploadSingleImage(arr.file).then((image) => resolve({ ...arr, image: image }));
+					});
 				});
-			});
+	
+				return Promise.all(promises).then((result) => result);
+			};
+	
+			if (imageUpLoadArray) {
+				const newUpload = await changeData(imageUpLoadArray);
+				newUpload.forEach((updatedObj) => {
+					updatedContainer.container[updatedObj.index].image = updatedObj.image;
+				});
+			}
+	
+			if (fileArray) {
+				const newUpload = await changeData(fileArray);
+				newUpload.forEach((updatedObj) => {
+					const index = updatedContainer.container.findIndex((obj) => obj._id === updatedObj._id);
+					if (index > -1) {
+						updatedContainer.container[index].image = updatedObj.image;
+					}
+				});
+			}
+			putData(id, updatedContainer);
 
-			return Promise.all(promises).then((result) => result);
-		};
-
-		if (imageUpLoadArray) {
-			const newUpload = await changeData(imageUpLoadArray);
-			newUpload.forEach((updatedObj) => {
-				updatedContainer.container[updatedObj.index].image = updatedObj.image;
-			});
-		}
-
-		if (fileArray) {
-			const newUpload = await changeData(fileArray);
-			newUpload.forEach((updatedObj) => {
-				const index = updatedContainer.container.findIndex((obj) => obj._id === updatedObj._id);
-				if (index > -1) {
-					updatedContainer.container[index].image = updatedObj.image;
-				}
-			});
-		}
-		putData(id, updatedContainer);
+      toast.update(idToast, { 
+        type: "success",
+        render: "Update success",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log(error)
+    }
 	};
 
 	const handleClickDelete = async () => {
-		await client.delete(`/skill/${id}`);
-		setContainer([]);
-		setImage(
-			'https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25logo-placeholder.png?alt=media&token=db37a0c6-9b95-49c0-965c-a0a6920c9e6e'
-		);
-		setShowDefault(false);
-		setDisableUpdate(true);
-		setDisableAdd(false);
+    try {
+      const idToast = toast("Deleting in progress, please wait", {autoClose: false })
+			await client.delete(`/skill/${id}`);
+			setContainer([]);
+			setImage(
+				'https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25logo-placeholder.png?alt=media&token=db37a0c6-9b95-49c0-965c-a0a6920c9e6e'
+			);
+			setShowDefault(false);
+			setDisableUpdate(true);
+			setDisableAdd(false);
+      toast.update(idToast, { 
+        type: "success",
+        render: "Delete success",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log(error)
+    }
 	};
 
 	return (
@@ -215,6 +238,7 @@ const FormSkill = ({ setDisableAdd }) => {
 						</div>
 					</Form>
 				</Card.Body>
+				<ToastContainer position="top-center" />
 			</Card>
 		</>
 	);
