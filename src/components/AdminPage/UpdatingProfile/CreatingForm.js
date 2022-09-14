@@ -100,7 +100,7 @@ const CreatingForm = () => {
           </Row>
           <div className="mt-3">
             <Button onClick={handleClick} disabled={disableUpdate} variant="primary" type="submit">
-              Save Allss
+              Save All
             </Button>
           </div>
         </Form>
