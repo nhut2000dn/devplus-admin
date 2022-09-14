@@ -5,6 +5,8 @@ import { client } from "../../../service/baseApi";
 import { uploadSingleImage } from "../../../service/uploadImage";
 import TableTestimonial from "../Testimonial/TableTestimonial";
 import { useHistory } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreatingForm = () => {
   const [testimonials, setTestimonials] = useState([]);
@@ -69,41 +71,52 @@ const CreatingForm = () => {
   const handleClickSave = async (e) => {
     e.preventDefault();
 
-    let updatedTestimonial = {
-      testimonials,
-    };
-
-    const postData = async (objData) => {
-      await client.post("/testimonial", objData);
-      history.push("/components/testimonial");
-    };
-
-    if (imageFile) {
-      const newImage = await uploadSingleImage(imageFile);
-      updatedTestimonial.testimonials[testimonials.length - 1].img = newImage;
-    }
-
-    if (fileArray) {
-      (async function () {
-        const promises = fileArray.map(async (file) => {
-          const updateImage = await uploadSingleImage(file.file);
-          return { img: updateImage, _id: file._id };
-        });
-
-        const promisesResult = await Promise.all(promises);
-
-        promisesResult.forEach((updatedObj) => {
-          const index = updatedTestimonial.testimonials.findIndex(
-            (obj) => obj._id === updatedObj._id
-          );
-          if (index > -1) {
-            updatedTestimonial.testimonials[index].img = updatedObj.img;
-          }
-        });
+    try {
+      const id = toast("Creating in progress, please wait", {autoClose: false })
+      let updatedTestimonial = {
+        testimonials,
+      };
+  
+      const postData = async (objData) => {
+        await client.post("/testimonial", objData);
+        history.push("/components/testimonial");
+      };
+  
+      if (imageFile) {
+        const newImage = await uploadSingleImage(imageFile);
+        updatedTestimonial.testimonials[testimonials.length - 1].img = newImage;
+      }
+  
+      if (fileArray) {
+        (async function () {
+          const promises = fileArray.map(async (file) => {
+            const updateImage = await uploadSingleImage(file.file);
+            return { img: updateImage, _id: file._id };
+          });
+  
+          const promisesResult = await Promise.all(promises);
+  
+          promisesResult.forEach((updatedObj) => {
+            const index = updatedTestimonial.testimonials.findIndex(
+              (obj) => obj._id === updatedObj._id
+            );
+            if (index > -1) {
+              updatedTestimonial.testimonials[index].img = updatedObj.img;
+            }
+          });
+          postData(updatedTestimonial);
+        })();
+      } else {
         postData(updatedTestimonial);
-      })();
-    } else {
-      postData(updatedTestimonial);
+      }
+      toast.update(id, { 
+        type: "success",
+        render: "Created success",
+        autoClose: 2000,
+        onClose: () => history.push("/components/testimonial")
+      });
+    } catch (error) {
+      console.log(error)
     }
   };
 
@@ -206,6 +219,7 @@ const CreatingForm = () => {
             </div>
           </Form>
         </Card.Body>
+        <ToastContainer position="top-center" />
       </Card>
     </>
   );

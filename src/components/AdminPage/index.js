@@ -13,6 +13,11 @@ import CreatingBanner from "./CreatingBanner";
 import CreatingAbout from "./CreatingAbout";
 import CreatingTestimonial from "./CreatingTestimonial";
 import CreatingAdmission from "./CreatingAdmission";
+import User from "./User/";
+import CreatingUser from "./CreatingUser";
+import UpdateUser from "./UpdatingUser";
+import UpdateProfile from "./UpdatingProfile";
+import ChangePassword from "./ChangePassword";
 
 export default {
   Admission,
@@ -30,4 +35,9 @@ export default {
   CreatingAbout,
   CreatingTestimonial,
   CreatingAdmission,
+  User,
+  CreatingUser,
+  UpdateUser,
+  UpdateProfile,
+  ChangePassword,
 };

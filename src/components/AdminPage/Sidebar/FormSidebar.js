@@ -8,6 +8,8 @@ import {
   uploadSingleImage,
 } from "../../../service/uploadImage";
 import ModalDelete from "../utils/ModalDelete";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FormSidebar = ({ setDisableAdd }) => {
   const [desc, setDesc] = useState("");
@@ -52,53 +54,74 @@ const FormSidebar = ({ setDisableAdd }) => {
   const handleClickSave = async (e) => {
     e.preventDefault();
 
-    let updatedSidebar = {
-      desc: desc,
-      logoImg: logo,
-      gallery: gallery,
-      mapImg: map,
-    };
-
-    if (logoFile) {
-      const newLogo = await uploadSingleImage(logoFile);
-      updatedSidebar = { ...updatedSidebar, logoImg: newLogo };
-    }
-
-    if (galleryFile) {
-      const newGallery = await uploadMultipleImages(galleryFile);
-      const oldGallery = gallery.slice(0, gallery.length - newGallery.length);
-      console.log(oldGallery);
-      updatedSidebar = {
-        ...updatedSidebar,
-        gallery: [...oldGallery, ...newGallery],
+    try {
+      const idToast = toast("Updating in progress, please wait", {autoClose: false })
+      let updatedSidebar = {
+        desc: desc,
+        logoImg: logo,
+        gallery: gallery,
+        mapImg: map,
       };
-    }
+  
+      if (logoFile) {
+        const newLogo = await uploadSingleImage(logoFile);
+        updatedSidebar = { ...updatedSidebar, logoImg: newLogo };
+      }
+  
+      if (galleryFile) {
+        const newGallery = await uploadMultipleImages(galleryFile);
+        const oldGallery = gallery.slice(0, gallery.length - newGallery.length);
+        console.log(oldGallery);
+        updatedSidebar = {
+          ...updatedSidebar,
+          gallery: [...oldGallery, ...newGallery],
+        };
+      }
+  
+      if (mapFile) {
+        const newMap = await uploadSingleImage(mapFile);
+        updatedSidebar = { ...updatedSidebar, mapImg: newMap };
+      }
+  
+      const res = await client.put(`/sidebar/${id}`, updatedSidebar);
+      setDesc(res.data.desc);
+      setLogo(res.data.logoImg);
+      setGallery(res.data.gallery);
+      setMap(res.data.mapImg);
 
-    if (mapFile) {
-      const newMap = await uploadSingleImage(mapFile);
-      updatedSidebar = { ...updatedSidebar, mapImg: newMap };
+      toast.update(idToast, { 
+        type: "success",
+        render: "Update success",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log(error)
     }
-
-    const res = await client.put(`/sidebar/${id}`, updatedSidebar);
-    setDesc(res.data.desc);
-    setLogo(res.data.logoImg);
-    setGallery(res.data.gallery);
-    setMap(res.data.mapImg);
   };
 
   const handleClickDelete = async () => {
-    await client.delete(`/sidebar/${id}`);
-    setDesc("");
-    setLogo(
-      "https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25logo-placeholder.png?alt=media&token=db37a0c6-9b95-49c0-965c-a0a6920c9e6e"
-    );
-    setGallery([]);
-    setMap(
-      "https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25map-placeholder.jpg?alt=media&token=a441efac-d452-4655-b872-ec9e308d3a74"
-    );
-    setShowDefault(false);
-    setDisableUpdate(true);
-    setDisableAdd(false);
+    try {
+      const idToast = toast("Deleting in progress, please wait", {autoClose: false })
+      await client.delete(`/sidebar/${id}`);
+      setDesc("");
+      setLogo(
+        "https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25logo-placeholder.png?alt=media&token=db37a0c6-9b95-49c0-965c-a0a6920c9e6e"
+      );
+      setGallery([]);
+      setMap(
+        "https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25map-placeholder.jpg?alt=media&token=a441efac-d452-4655-b872-ec9e308d3a74"
+      );
+      setShowDefault(false);
+      setDisableUpdate(true);
+      setDisableAdd(false);
+      toast.update(idToast, { 
+        type: "success",
+        render: "Delete success",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
@@ -173,6 +196,7 @@ const FormSidebar = ({ setDisableAdd }) => {
           </div>
         </Form>
       </Card.Body>
+      <ToastContainer position="top-center" />
     </Card>
   );
 };
