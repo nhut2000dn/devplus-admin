@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_ROOT = 'https://devplus-api.herokuapp.com';
+const API_ROOT = 'https://devplus-api-exam.herokuapp.com';
 
 export const client = axios.create({
 	baseURL: API_ROOT,
