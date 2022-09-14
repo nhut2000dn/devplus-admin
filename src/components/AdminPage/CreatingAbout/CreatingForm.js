@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Col, Row, Card, Form, Button } from "@themesberg/react-bootstrap";
 import { client, getAbout } from "../../../service/baseApi";
 import { useHistory } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreatingForm = () => {
   const [title, setTitle] = useState("");
@@ -39,13 +41,23 @@ const CreatingForm = () => {
 
   const handleClickSave = async (e) => {
     e.preventDefault();
-    let dataAbout = {
-      titleAbout: title,
-      descAbout: desc,
-      itemsBoard: stepsDevplus.split(';').map(item => item.trim()),
-    };
-    const res = await client.post(`/about`, dataAbout);
-    history.push("/components/about");
+    try {
+      const id = toast("Creating in progress, please wait", {autoClose: false })
+      let dataAbout = {
+        titleAbout: title,
+        descAbout: desc,
+        itemsBoard: stepsDevplus.split(';').map(item => item.trim()),
+      };
+      const res = await client.post(`/about`, dataAbout);
+      toast.update(id, { 
+        type: "success",
+        render: "Create success",
+        autoClose: 2000,
+        onClose: () => history.push("/components/about")
+      });
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
@@ -118,6 +130,7 @@ const CreatingForm = () => {
           </div>
         </Form>
       </Card.Body>
+      <ToastContainer position="top-center" />
     </Card>
   );
 };

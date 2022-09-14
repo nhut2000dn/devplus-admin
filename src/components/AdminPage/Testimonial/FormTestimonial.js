@@ -5,6 +5,8 @@ import { client, getTestimonial } from "../../../service/baseApi";
 import { uploadSingleImage } from "../../../service/uploadImage";
 import TableTestimonial from "./TableTestimonial";
 import ModalDelete from "../utils/ModalDelete";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FormTestimonial = ({ setDisableAdd }) => {
   const [testimonials, setTestimonials] = useState([]);
@@ -91,58 +93,78 @@ const FormTestimonial = ({ setDisableAdd }) => {
 
   const handleClickSave = async (e) => {
     e.preventDefault();
-
-    let updatedTestimonial = {
-      testimonials,
-    };
-
-    const putData = async (id, objData) => {
-      const res = await client.put(`/testimonial/${id}`, objData);
-      setTestimonials(res.data.testimonials);
-    };
-
-    const changeData = async (fileArray) => {
-      const promises = fileArray.map((arr) => {
-        return new Promise((resolve, reject) => {
-          uploadSingleImage(arr.file).then((img) =>
-            resolve({ ...arr, img: img })
-          );
+    try {
+      const idToast = toast("Updating in progress, please wait", {autoClose: false })
+      let updatedTestimonial = {
+        testimonials,
+      };
+  
+      const putData = async (id, objData) => {
+        const res = await client.put(`/testimonial/${id}`, objData);
+        setTestimonials(res.data.testimonials);
+      };
+  
+      const changeData = async (fileArray) => {
+        const promises = fileArray.map((arr) => {
+          return new Promise((resolve, reject) => {
+            uploadSingleImage(arr.file).then((img) =>
+              resolve({ ...arr, img: img })
+            );
+          });
         });
-      });
+  
+        return Promise.all(promises).then((result) => result);
+      };
+  
+      if (imageUpLoadArray) {
+        const newUpload = await changeData(imageUpLoadArray);
+        newUpload.forEach((updatedObj) => {
+          updatedTestimonial.testimonials[updatedObj.index].img = updatedObj.img;
+        });
+      }
+  
+      if (fileArray) {
+        const newUpload = await changeData(fileArray);
+        newUpload.forEach((updatedObj) => {
+          const index = updatedTestimonial.testimonials.findIndex(
+            (obj) => obj._id === updatedObj._id
+          );
+          if (index > -1) {
+            updatedTestimonial.testimonials[index].img = updatedObj.img;
+          }
+        });
+      }
+      await putData(id, updatedTestimonial);
 
-      return Promise.all(promises).then((result) => result);
-    };
-
-    if (imageUpLoadArray) {
-      const newUpload = await changeData(imageUpLoadArray);
-      newUpload.forEach((updatedObj) => {
-        updatedTestimonial.testimonials[updatedObj.index].img = updatedObj.img;
+      toast.update(idToast, { 
+        type: "success",
+        render: "Update success",
+        autoClose: 2000,
       });
+    } catch (error) {
+      console.log(error)
     }
-
-    if (fileArray) {
-      const newUpload = await changeData(fileArray);
-      newUpload.forEach((updatedObj) => {
-        const index = updatedTestimonial.testimonials.findIndex(
-          (obj) => obj._id === updatedObj._id
-        );
-        if (index > -1) {
-          updatedTestimonial.testimonials[index].img = updatedObj.img;
-        }
-      });
-    }
-    putData(id, updatedTestimonial);
   };
 
   const handleClickDelete = async () => {
-    await client.delete(`/testimonial/${id}`);
-    setTestimonials([]);
-    setImage(
-      "https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25logo-placeholder.png?alt=media&token=db37a0c6-9b95-49c0-965c-a0a6920c9e6e"
-    );
-    setShowDefault(false);
-    setDisableUpdate(true);
-    setDisableAdd(false);
+    try {
+      const idToast = toast("Deleting in progress, please wait", {autoClose: false })
+      await client.delete(`/testimonial/${id}`);
+      setTestimonials([]);
+      setImage(
+        "https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25logo-placeholder.png?alt=media&token=db37a0c6-9b95-49c0-965c-a0a6920c9e6e"
+      );
+      setShowDefault(false);
+      setDisableUpdate(true);
+      setDisableAdd(false);
+      toast.update(idToast, { 
+        type: "success",
+        render: "Delete success",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
@@ -258,6 +280,7 @@ const FormTestimonial = ({ setDisableAdd }) => {
             </div>
           </Form>
         </Card.Body>
+        <ToastContainer position="top-center" />
       </Card>
     </>
   );

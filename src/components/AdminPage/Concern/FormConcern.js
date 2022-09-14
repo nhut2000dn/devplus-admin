@@ -5,6 +5,8 @@ import { client, getConcern } from "../../../service/baseApi";
 import { uploadSingleImage } from "../../../service/uploadImage";
 import TableConcern from "./TableConcern";
 import ModalDelete from "../utils/ModalDelete";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FormConcern = ({ setDisableAdd }) => {
   const [concerns, setConcerns] = useState([]);
@@ -66,34 +68,54 @@ const FormConcern = ({ setDisableAdd }) => {
   const handleClickSave = async (e) => {
     e.preventDefault();
 
-    let updatedConcern = {
-      concerns,
-      img: image,
-      video: videoId,
-    };
+    try {
+      const idToast = toast("Updating in progress, please wait", {autoClose: false })
+      let updatedConcern = {
+        concerns,
+        img: image,
+        video: videoId,
+      };
+  
+      if (imageFile) {
+        const newImage = await uploadSingleImage(imageFile);
+        updatedConcern = { ...updatedConcern, img: newImage };
+      }
+  
+      const res = await client.put(`/concern/${id}`, updatedConcern);
+      setConcerns(res.data.concerns);
+      setImage(res.data.img);
+      setVideoId(res.data.video);
 
-    if (imageFile) {
-      const newImage = await uploadSingleImage(imageFile);
-      updatedConcern = { ...updatedConcern, img: newImage };
+      toast.update(idToast, { 
+        type: "success",
+        render: "Update success",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log(error)
     }
-
-    const res = await client.put(`/concern/${id}`, updatedConcern);
-    setConcerns(res.data.concerns);
-    setImage(res.data.img);
-    setVideoId(res.data.video);
-    console.log(res);
   };
 
   const handleClickDelete = async () => {
-    await client.delete(`/concern/${id}`);
-    setConcerns([]);
-    setVideoId("");
-    setImage(
-      "https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25logo-placeholder.png?alt=media&token=db37a0c6-9b95-49c0-965c-a0a6920c9e6e"
-    );
-    setShowDefault(false);
-    setDisableUpdate(true);
-    setDisableAdd(false);
+    try {
+      const idToast = toast("Deleting in progress, please wait", {autoClose: false })
+      await client.delete(`/concern/${id}`);
+      setConcerns([]);
+      setVideoId("");
+      setImage(
+        "https://firebasestorage.googleapis.com/v0/b/devplus-admin.appspot.com/o/25logo-placeholder.png?alt=media&token=db37a0c6-9b95-49c0-965c-a0a6920c9e6e"
+      );
+      setShowDefault(false);
+      setDisableUpdate(true);
+      setDisableAdd(false);
+      toast.update(idToast, { 
+        type: "success",
+        render: "Delete success",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log(error)
+    } 
   };
 
   return (
@@ -208,6 +230,7 @@ const FormConcern = ({ setDisableAdd }) => {
             </div>
           </Form>
         </Card.Body>
+        <ToastContainer position="top-center" />
       </Card>
     </>
   );
