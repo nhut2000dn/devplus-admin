@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Col, Row, Card, Form, Button } from "@themesberg/react-bootstrap";
 import { client, getAbout } from "../../../service/baseApi";
 import ModalDelete from "../utils/ModalDelete";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const GeneralInfoForm = ({setDisable}) => {
   const [title, setTitle] = useState("");
@@ -62,25 +64,46 @@ export const GeneralInfoForm = ({setDisable}) => {
 
   const handleClickSave = async (e) => {
     e.preventDefault();
-    let dataAbout = {
-      titleAbout: title,
-      descAbout: desc,
-      itemsBoard: stepsDevplus.split(';').map(item => item.trim()),
-    };
-    const res = await client.put(`/about/${id}`, dataAbout);
-    setTitle(res.data.titleAbout);
-    setDesc(res.data.descAbout);
-    setStepsDevplus(res.data.itemsBoard.join('; '));
+    try {
+      const idToast = toast("Updating in progress, please wait", {autoClose: false })
+      let dataAbout = {
+        titleAbout: title,
+        descAbout: desc,
+        itemsBoard: stepsDevplus.split(';').map(item => item.trim()),
+      };
+      const res = await client.put(`/about/${id}`, dataAbout);
+      setTitle(res.data.titleAbout);
+      setDesc(res.data.descAbout);
+      setStepsDevplus(res.data.itemsBoard.join('; '));
+
+      toast.update(idToast, { 
+        type: "success",
+        render: "Update success",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const handleClickDelete = async () => {
-    await client.delete(`/about/${id}`);
-    setTitle("");
-    setDesc("");
-    setStepsDevplus("");
-    setShowDefault(false);
-    setDisable(false);
-    setDisableDelete(true);
+    try {
+      const idToast = toast("Deleting in progress, please wait", {autoClose: false })
+      await client.delete(`/about/${id}`);
+      setTitle("");
+      setDesc("");
+      setStepsDevplus("");
+      setShowDefault(false);
+      setDisable(false);
+      setDisableDelete(true);
+      toast.update(idToast, { 
+        type: "success",
+        render: "Delete success",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
@@ -169,6 +192,7 @@ export const GeneralInfoForm = ({setDisable}) => {
           </div>
         </Form>
       </Card.Body>
+      <ToastContainer position="top-center" />
     </Card>
   );
 };

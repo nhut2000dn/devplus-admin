@@ -4,6 +4,8 @@ import ChoosePhoto from "../utils/ChoosePhoto";
 import { client, getAdmission } from "../../../service/baseApi";
 import {uploadSingleImage} from "../../../service/uploadImage";
 import ModalDelete from "../utils/ModalDelete";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const GeneralInfoForm = ({setDisable}) => {
   const [desc, setDesc] = useState("");
@@ -18,12 +20,12 @@ export const GeneralInfoForm = ({setDisable}) => {
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await getAdmission();
-      const banner = data[0];
-      if (banner) {
+      const admission = data[0];
+      if (admission) {
         setDisable(true);
-        setDesc(banner.desc);
-        setImg(banner.image);
-        setId(banner._id);
+        setDesc(admission.desc);
+        setImg(admission.image);
+        setId(admission._id);
       } else {
         setDisableUpdateDelete(true);
       }
@@ -37,25 +39,46 @@ export const GeneralInfoForm = ({setDisable}) => {
 
   const handleClickSave = async (e) => {
     e.preventDefault();
-    let dataAdmission = {
-      desc: desc,
-      image: img,
-    };
-    imgFile && (dataAdmission = {...dataAdmission, image: await uploadSingleImage(imgFile, setImg)});
-    const res = await client.put(`/banner/${id}`, dataAdmission);
-    setDesc(res.data.desc);
-    setImgFile(res.data.image);
+    try {
+      const idToast = toast("Updating in progress, please wait", {autoClose: false })
+      let dataAdmission = {
+        desc: desc,
+        image: img,
+      };
+      imgFile && (dataAdmission = {...dataAdmission, image: await uploadSingleImage(imgFile, setImg)});
+      const res = await client.put(`/admission/${id}`, dataAdmission);
+      setDesc(res.data.desc);
+      setImgFile(res.data.image);
+
+      toast.update(idToast, { 
+        type: "success",
+        render: "Update success",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const handleClickDelete = async () => {
-    await client.delete(`/admission/${id}`);
-    setDesc("");
-    setImg(
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUgAAACaCAMAAAD8SyGRAAAAJFBMVEVvptSMuN1yqNWEs9qLt92Dstp9r9h1qtZ7rdd1qdZ5rNeFs9vATjLUAAADZ0lEQVR4nO3dDXbiMAxF4YqElNL973eAGaYN2JbsGITF/RbAMeqL/JM0fHwAAAAAAAAAAAAAAAAAAAAAAADgtXwt0ywi8zwtn95jGdgiK3tq2WQvd6ad96DGc7wv49niPa7RJOL4L5TeIxvLlKvjaeLh8rYr1JFKVijW8VRJ7/GN4lCu42kd5D3CMey0Ooocvcc4BOXCvvAe4wg+DXWUg/coB2AJJJHUGTrkGV1So07ZfzFxa2xXNte2ylhHCqmxFpImWfZlLSQLoLLMMeQ9DibLKGQnFLIT0wbxjB5ZZtzYiHBHUTEbC8kxucK4s+GUXMNeuxdbIWmRquwdba7sOqZ5m8WPgWG6IZAWhkjSIU3UbSLbQyNlvuE5KrPysz/eoxtJIZPUscqSqyNbmkqZ8zRu1dRLhJLpus1hNenMlLHd7rh8z6caTvsDB5D/7Y5HqtHBxKTbxbXVeY9jdD/3YrxHMrZfa5lv77EMjdVgH+vFNceJzW52KKyCGt3u9jhRbMSmuY/E8QOnOA2Sd7O8BzWi5CEtB93VMrdX2XXXyt01oE3Wyd/vZzVZJXsbizZZpfQACm2yQj6QwkNlFZQnoji+sNIeG/Ue3yjUR/Q4vrDRn2OmTVpYHmOmTRqYHqz3HuQILHWkTepMgeSUV2X+B02OL8qMgRTaZJk5kLTJMnsgOb4oqqgjbbKgJpDCKW9WRYe84JQ3ozKQtMmM2kAKxxdp1YEUji9SGgJJm0xpCSTr8ntNgRRDm9wt0zQt77NUagukqG3y+rnvMsO3BlJpk78/9j1CaX1PbkKhTa7/PM/7Nn7aAymFU96bT32Hiam5Q15k2uTdXyf++t38CsiMZPtLpPzZ3+vpNnTIi9RFu0u8DTH6xb01kKnFTaqO4W+abQ2kJE55M2/nDL053zRlX63bZDqPEnxz3iGQNxXK1jH0DqdLIFe/NPdZeutu3Fs9XQJ5dl0mFp/4jfvTftun7B/TsuzVv0vUNVC3QJrF3OCYf/ujI+/v/BDPD2TMi9sjkCE3OB6BlICHvD2n7BrhNjhOgQy3wfEKpETb4LgFMtjF7RjIWGsgx0BKpIvbNZASaIPjG8g4F7d3IMNscLwDKUE2OP6BDLIGeoFAhphvXiGQIQr5EoEMUEjzL+c+lncZtrP+TOmD/QH6TB2pYguGZwAAAABJRU5ErkJggg=="
-    );
-    setShowDefault(false);
-    setDisable(false);
-    setDisableUpdateDelete(true);
+    try {
+      const idToast = toast("Deleting in progress, please wait", {autoClose: false })
+      await client.delete(`/admission/${id}`);
+      setDesc("");
+      setImg(
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUgAAACaCAMAAAD8SyGRAAAAJFBMVEVvptSMuN1yqNWEs9qLt92Dstp9r9h1qtZ7rdd1qdZ5rNeFs9vATjLUAAADZ0lEQVR4nO3dDXbiMAxF4YqElNL973eAGaYN2JbsGITF/RbAMeqL/JM0fHwAAAAAAAAAAAAAAAAAAAAAAADgtXwt0ywi8zwtn95jGdgiK3tq2WQvd6ad96DGc7wv49niPa7RJOL4L5TeIxvLlKvjaeLh8rYr1JFKVijW8VRJ7/GN4lCu42kd5D3CMey0Ooocvcc4BOXCvvAe4wg+DXWUg/coB2AJJJHUGTrkGV1So07ZfzFxa2xXNte2ylhHCqmxFpImWfZlLSQLoLLMMeQ9DibLKGQnFLIT0wbxjB5ZZtzYiHBHUTEbC8kxucK4s+GUXMNeuxdbIWmRquwdba7sOqZ5m8WPgWG6IZAWhkjSIU3UbSLbQyNlvuE5KrPysz/eoxtJIZPUscqSqyNbmkqZ8zRu1dRLhJLpus1hNenMlLHd7rh8z6caTvsDB5D/7Y5HqtHBxKTbxbXVeY9jdD/3YrxHMrZfa5lv77EMjdVgH+vFNceJzW52KKyCGt3u9jhRbMSmuY/E8QOnOA2Sd7O8BzWi5CEtB93VMrdX2XXXyt01oE3Wyd/vZzVZJXsbizZZpfQACm2yQj6QwkNlFZQnoji+sNIeG/Ue3yjUR/Q4vrDRn2OmTVpYHmOmTRqYHqz3HuQILHWkTepMgeSUV2X+B02OL8qMgRTaZJk5kLTJMnsgOb4oqqgjbbKgJpDCKW9WRYe84JQ3ozKQtMmM2kAKxxdp1YEUji9SGgJJm0xpCSTr8ntNgRRDm9wt0zQt77NUagukqG3y+rnvMsO3BlJpk78/9j1CaX1PbkKhTa7/PM/7Nn7aAymFU96bT32Hiam5Q15k2uTdXyf++t38CsiMZPtLpPzZ3+vpNnTIi9RFu0u8DTH6xb01kKnFTaqO4W+abQ2kJE55M2/nDL053zRlX63bZDqPEnxz3iGQNxXK1jH0DqdLIFe/NPdZeutu3Fs9XQJ5dl0mFp/4jfvTftun7B/TsuzVv0vUNVC3QJrF3OCYf/ujI+/v/BDPD2TMi9sjkCE3OB6BlICHvD2n7BrhNjhOgQy3wfEKpETb4LgFMtjF7RjIWGsgx0BKpIvbNZASaIPjG8g4F7d3IMNscLwDKUE2OP6BDLIGeoFAhphvXiGQIQr5EoEMUEjzL+c+lncZtrP+TOmD/QH6TB2pYguGZwAAAABJRU5ErkJggg=="
+      );
+      setShowDefault(false);
+      setDisable(false);
+      setDisableUpdateDelete(true);
+      toast.update(idToast, { 
+        type: "success",
+        render: "Delete success",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
@@ -109,11 +132,12 @@ export const GeneralInfoForm = ({setDisable}) => {
               showDefault={showDefault}
               handleDelete={handleClickDelete}
               handleClose={handleClose}
-              name="banner"
+              name="admission"
             />
           </div>
         </Form>
       </Card.Body>
+      <ToastContainer position="top-center" />
     </Card>
   );
 };

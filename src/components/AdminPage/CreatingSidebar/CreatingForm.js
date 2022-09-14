@@ -8,6 +8,8 @@ import {
   uploadSingleImage,
 } from "../../../service/uploadImage";
 import { useHistory } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreatingForm = () => {
   const [desc, setDesc] = useState("");
@@ -36,36 +38,47 @@ const CreatingForm = () => {
   const handleClickSave = async (e) => {
     e.preventDefault();
 
-    let newSidebar = {
-      desc: desc,
-      logoImg: logo,
-      gallery: gallery,
-      mapImg: map,
-      socialIcon: socialIcon,
-    };
-
-    if (logoFile) {
-      const newLogo = await uploadSingleImage(logoFile);
-      newSidebar = { ...newSidebar, logoImg: newLogo };
-    }
-
-    if (galleryFile) {
-      const newGallery = await uploadMultipleImages(galleryFile);
-      const oldGallery = gallery.slice(0, gallery.length - newGallery.length);
-      console.log(oldGallery);
-      newSidebar = {
-        ...newSidebar,
-        gallery: [...oldGallery, ...newGallery],
+    try {
+      const idToast = toast("Creating in progress, please wait", {autoClose: false })
+      let newSidebar = {
+        desc: desc,
+        logoImg: logo,
+        gallery: gallery,
+        mapImg: map,
+        socialIcon: socialIcon,
       };
-    }
+  
+      if (logoFile) {
+        const newLogo = await uploadSingleImage(logoFile);
+        newSidebar = { ...newSidebar, logoImg: newLogo };
+      }
+  
+      if (galleryFile) {
+        const newGallery = await uploadMultipleImages(galleryFile);
+        const oldGallery = gallery.slice(0, gallery.length - newGallery.length);
+        console.log(oldGallery);
+        newSidebar = {
+          ...newSidebar,
+          gallery: [...oldGallery, ...newGallery],
+        };
+      }
+  
+      if (mapFile) {
+        const newMap = await uploadSingleImage(mapFile);
+        newSidebar = { ...newSidebar, mapImg: newMap };
+      }
+  
+      await client.post("/sidebar", newSidebar);
 
-    if (mapFile) {
-      const newMap = await uploadSingleImage(mapFile);
-      newSidebar = { ...newSidebar, mapImg: newMap };
+      toast.update(idToast, { 
+        type: "success",
+        render: "Create success",
+        autoClose: 2000,
+        onClose: () => history.push("/components/sidebar")
+      });
+    } catch (error) {
+      console.log(error)
     }
-
-    await client.post("/sidebar", newSidebar);
-    history.push("/components/sidebar");
   };
 
   return (
@@ -140,6 +153,7 @@ const CreatingForm = () => {
           </div>
         </Form>
       </Card.Body>
+      <ToastContainer position="top-center" />
     </Card>
   );
 };

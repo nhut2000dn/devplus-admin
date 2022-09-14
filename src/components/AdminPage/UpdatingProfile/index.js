@@ -14,10 +14,10 @@ const CreatingBanner = () => {
         <Row className="d-flex flex-wrap flex-md-nowrap align-items-center py-4">
           <Col className="d-block mb-4 mb-md-0">
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-              <h1 className="h2">Creating New About</h1>
+              <h1 className="h2">Edit Profile</h1>
               <Button
                 variant="secondary"
-                onClick={() => history.push("/components/about")}
+                onClick={() => history.push("/users")}
                 className="text-dark me-2"
               >
                 <FontAwesomeIcon icon={faArrowAltCircleLeft} className="me-2" />

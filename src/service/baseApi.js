@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_ROOT = 'https://devplus-api.herokuapp.com';
+const API_ROOT = 'http://localhost:5000';
 
 export const client = axios.create({
 	baseURL: API_ROOT,
@@ -40,4 +40,12 @@ export const getAdmission = async () => {
 
 export const getCampus = async () => {
   return await client.get("/campus");
+};
+
+export const getUsers = async () => {
+	return await client.get('/user');
+};
+
+export const getUserById = async (id) => {
+	return await client.get(`/user/${ id }`);
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 import { Routes } from "../routes";
 
 // pages
@@ -8,12 +8,12 @@ import DashboardOverview from "./dashboard/DashboardOverview";
 import Transactions from "./Transactions";
 import Settings from "./Settings";
 import BootstrapTables from "./tables/BootstrapTables";
-import Signin from "./examples/Signin";
-import Signup from "./examples/Signup";
+import Signin from "./Signin";
+import Signup from "./Signup";
 import ForgotPassword from "./examples/ForgotPassword";
 import ResetPassword from "./examples/ResetPassword";
 import Lock from "./examples/Lock";
-import NotFoundPage from "./examples/NotFound";
+import NotFoundPage from "./NotFound";
 import ServerError from "./examples/ServerError";
 
 // documentation pages
@@ -49,6 +49,9 @@ import Tooltips from "./components/Tooltips";
 import Toasts from "./components/Toasts";
 
 import Admin from "../components/AdminPage";
+
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -92,26 +95,50 @@ const RouteWithSidebar = ({ component: Component, ...rest }) => {
     localStorage.setItem("settingsVisible", !showSettings);
   };
 
-  return (
-    <Route
-      {...rest}
-      render={(props) => (
-        <>
-          <Preloader show={loaded ? false : true} />
-          <Sidebar />
+  // get cookie from browser if logged in
+  const token = cookies.get("TOKEN");
+  const history = useHistory();
 
-          <main className="content">
-            <Navbar />
-            <Component {...props} />
-            <Footer
-              toggleSettings={toggleSettings}
-              showSettings={showSettings}
-            />
-          </main>
-        </>
-      )}
-    />
-  );
+  const logoutHandle = () => {
+    cookies.remove("TOKEN", { path: "/" });
+    cookies.remove("email", { path: "/" });
+    cookies.remove("avatar", { path: "/" });
+    cookies.remove("id", { path: "/" });
+    history.push("/sign-in");
+  }
+
+  // return route if there is a valid token set in the cookie
+  if (token) {
+    return (
+      <Route
+        {...rest}
+        render={(props) => (
+          <>
+            <Preloader show={loaded ? false : true} />
+            <Sidebar />
+  
+            <main className="content">
+              <Navbar logoutHandle={logoutHandle} />
+              <Component {...props} />
+              <Footer
+                toggleSettings={toggleSettings}
+                showSettings={showSettings}
+              />
+            </main>
+          </>
+        )}
+      />
+    );
+  } else {
+    // return the user to the landing page if there is no valid token set
+    return (
+      <Redirect
+        to={{
+          pathname: "/sign-in",
+        }}
+      />
+    );
+  }
 };
 
 export default () => (
@@ -293,6 +320,31 @@ export default () => (
       exact
       path={Routes.CreatingTestimonial.path}
       component={Admin.CreatingTestimonial}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.User.path}
+      component={Admin.User}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.CreatingUser.path}
+      component={Admin.CreatingUser}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.UpdateUser.path}
+      component={Admin.UpdateUser}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.UpdateProfile.path}
+      component={Admin.UpdateProfile}
+    />
+    <RouteWithSidebar
+      exact
+      path={Routes.ChangePassword.path}
+      component={Admin.ChangePassword}
     />
     <Redirect to={Routes.NotFound.path} />
   </Switch>
